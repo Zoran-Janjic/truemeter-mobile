@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Linking, StyleSheet } from 'react-native';
+import * as MailComposer from 'expo-mail-composer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Theme } from './ui/Theme';
 
@@ -10,6 +11,21 @@ interface AboutScreenProps {
 export default function AboutScreen({ onNavigateHome }: AboutScreenProps) {
   const openLink = (url: string) => {
     Linking.openURL(url);
+  };
+
+  const handleContact = async () => {
+    const isAvailable = await MailComposer.isAvailableAsync();
+
+    if (isAvailable) {
+      await MailComposer.composeAsync({
+        recipients: ['janjiczoran23@gmail.com'],
+        subject: 'TrueMeter Saradnja',
+        body: 'Poštovani,\n\nZainteresovan/a sam za saradnju...',
+      });
+    } else {
+      // Fallback if mail app is not configured
+      Linking.openURL('mailto:janjiczoran23@gmail.com');
+    }
   };
 
   return (
@@ -27,56 +43,56 @@ export default function AboutScreen({ onNavigateHome }: AboutScreenProps) {
           colors={[Theme.colors.primaryDark, '#1e3a8a']}
           style={styles.heroCard}
         >
-          <Text style={styles.heroTitle}>Zašto TrueMeter?</Text>
+          <Text style={styles.heroTitle}>Napredna AI Dijagnostika</Text>
           <Text style={styles.heroDescription}>
-            Za razliku od servisa poput CarVertical-a, TrueMeter <Text style={{ fontWeight: 'bold' }}>ne zahtijeva</Text> broj šasije (VIN) da bi detektovao prevaru.
+            TrueMeter koristi <Text style={{ fontWeight: 'bold' }}>inferencijalnu statistiku</Text> i <Text style={{ fontWeight: 'bold' }}>mašinsko učenje</Text> modele za procjenu rizika, eliminišući potrebu za invazivnim prikupljanjem podataka.
           </Text>
 
           <View style={styles.comparisonContainer}>
             <View style={styles.comparisonBlock}>
-              <Text style={styles.comparisonLabel}>Drugi Servisi</Text>
-              <Text style={styles.comparisonText}>❌ Trebaju VIN broj</Text>
-              <Text style={styles.comparisonText}>❌ Koštaju 15-20€</Text>
-              <Text style={styles.comparisonText}>❌ Provjeravaju istoriju</Text>
+              <Text style={styles.comparisonLabel}>Klasični Servisi</Text>
+              <Text style={styles.comparisonText}>❌ Deterministički zapisi</Text>
+              <Text style={styles.comparisonText}>❌ Visoka cijena (15€+)</Text>
+              <Text style={styles.comparisonText}>❌ Zahtijevaju VIN</Text>
             </View>
             <View style={styles.verticalDivider} />
             <View style={styles.comparisonBlock}>
-              <Text style={[styles.comparisonLabel, { color: Theme.colors.success }]}>TrueMeter</Text>
-              <Text style={styles.comparisonText}>✅ Bez broja šasije</Text>
-              <Text style={styles.comparisonText}>✅ Potpuno besplatno</Text>
-              <Text style={styles.comparisonText}>✅ Analizira anomalije</Text>
+              <Text style={[styles.comparisonLabel, { color: Theme.colors.success }]}>TrueMeter AI</Text>
+              <Text style={styles.comparisonText}>✅ Probabilistička analiza</Text>
+              <Text style={styles.comparisonText}>✅ Besplatan pristup</Text>
+              <Text style={styles.comparisonText}>✅ Potpuna anonimnost</Text>
             </View>
           </View>
         </LinearGradient>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Kako je to moguće?</Text>
+          <Text style={styles.sectionTitle}>Tehnička Metodologija</Text>
           <Text style={styles.description}>
-            Većina prevara prati određene statističke obrasce. Umjesto da tražimo papirni trag konkretnog vozila (koji se može falsifikovati), naš AI analizira samo vozilo.
+            Tradicionalni servisi se oslanjaju na istorijske zapise koji su često nepotpuni. TrueMeter analizira anomalije u korelaciji između cijene, kilometraže i stanja vozila.
           </Text>
 
           <View style={styles.methodologyBox}>
-            <Text style={styles.methodologyTitle}>🧠 Naš Pristup</Text>
+            <Text style={styles.methodologyTitle}>🧠 Model Neuronske Mreže</Text>
             <Text style={styles.methodologyText}>
-              Naš AI model je naučio "izgled" poštenog vs. manipulisanog vozila analizirajući <Text style={{ fontWeight: 'bold', color: Theme.colors.primaryLight }}>46,000+</Text> primjera sa njemačkog tržišta.
+              Sistem je treniran na datasetu od <Text style={{ fontWeight: 'bold', color: Theme.colors.primaryLight }}>46,000+ referentnih tačaka</Text> tržišta.
             </Text>
             <Text style={[styles.methodologyText, { marginTop: 10 }]}>
-              On traži nelogičnosti u odnosu cijene, godišta, kilometraže, snage i tipa motora koje ljudsko oko ne može primijetiti.
+              Algoritam identifikuje suptilna odstupanja (outliers) koja sugerišu manipulaciju kilometraže, čak i kada ne postoji "papirni trag".
             </Text>
           </View>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Glavne Prednosti</Text>
+          <Text style={styles.sectionTitle}>Ključni Benefiti</Text>
 
           <View style={styles.featureRow}>
             <View style={styles.iconBox}>
               <Text style={{ fontSize: 24 }}>🛡️</Text>
             </View>
             <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>Privatnost</Text>
+              <Text style={styles.featureTitle}>Potpuna Anonimnost</Text>
               <Text style={styles.featureDesc}>
-                Provjerite bilo koji oglas anonimno. Ne morate zvati prodavca da vam pošalje broj šasije.
+                Analiza se vrši bez identifikacije konkretnog vozila. Nije potreban VIN broj niti kontakt sa prodavcem (Zero-Knowledge).
               </Text>
             </View>
           </View>
@@ -86,9 +102,9 @@ export default function AboutScreen({ onNavigateHome }: AboutScreenProps) {
               <Text style={{ fontSize: 24 }}>⚡</Text>
             </View>
             <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>Brzina</Text>
+              <Text style={styles.featureTitle}>Trenutna Evaluacija</Text>
               <Text style={styles.featureDesc}>
-                Rezultat dobijate za manje od sekunde. Nema čekanja na generisanje izvještaja.
+                Procesiranje u realnom vremenu (Real-time) bez čekanja na eksterne API upite.
               </Text>
             </View>
           </View>
@@ -98,9 +114,9 @@ export default function AboutScreen({ onNavigateHome }: AboutScreenProps) {
               <Text style={{ fontSize: 24 }}>💰</Text>
             </View>
             <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>Ušteda</Text>
+              <Text style={styles.featureTitle}>Ekonomska Isplativost</Text>
               <Text style={styles.featureDesc}>
-                Filtrirajte loše ponude besplatno prije nego što platite mehaničara ili detaljan izvještaj.
+                Besplatna preliminarna detekcija anomalija prije alokacije sredstava za fizičku inspekciju.
               </Text>
             </View>
           </View>
@@ -111,6 +127,21 @@ export default function AboutScreen({ onNavigateHome }: AboutScreenProps) {
           <Text style={styles.warningText}>
             TrueMeter je alat za <Text style={{ fontWeight: 'bold' }}>procjenu rizika</Text>. Rezultat je vjerovatnoća (predikcija), a ne apsolutna garancija. Uvijek preporučujemo pregled vozila uživo.
           </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Kontakt i Saradnja</Text>
+          <Text style={styles.description}>
+            Zainteresovani ste za integraciju TrueMeter tehnologije ili poslovnu saradnju? Kontaktirajte nas direktno.
+          </Text>
+
+          <TouchableOpacity
+            style={styles.contactButton}
+            onPress={handleContact}
+          >
+            <Text style={styles.contactButtonIcon}>✉️</Text>
+            <Text style={styles.contactButtonText}>Pošaljite poruku</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.devBox}>
@@ -301,5 +332,23 @@ const styles = StyleSheet.create({
   versionText: {
     fontSize: 12,
     color: Theme.colors.textMuted,
+  },
+  contactButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Theme.colors.surfaceHighlight,
+    padding: 16,
+    borderRadius: Theme.borderRadius.m,
+    borderWidth: 1,
+    borderColor: Theme.colors.primary,
+  },
+  contactButtonIcon: {
+    fontSize: 20,
+    marginRight: 12,
+  },
+  contactButtonText: {
+    color: Theme.colors.textPrimary,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
